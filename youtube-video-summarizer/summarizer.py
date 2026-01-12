@@ -8,7 +8,7 @@ nltk.download("punkt", quiet=True)
 nltk.download("stopwords", quiet=True)
 
 
-def summarize(transcript_text, top_n=5):
+def summarize(transcript_text, top_n=10):
 
     # --------------------------
     # 1 Clean text
