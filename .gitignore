@@ -4,3 +4,5 @@ __pycache__/
 cache.json
 .vscode/
 pythonVirEnv/
+tempCodeRunnerFile.py
+.DS_Store
