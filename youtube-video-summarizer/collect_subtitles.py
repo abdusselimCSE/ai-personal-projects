@@ -2,6 +2,7 @@ from cache import load_cache, save_cache
 import requests  # type: ignore
 import os
 from dotenv import load_dotenv
+import json
 
 load_dotenv()
 
@@ -10,6 +11,7 @@ x_rapidapi_key = os.getenv("RAPIDAPI_KEY")
 
 if not x_rapidapi_key:
     raise ValueError("RPIDAPI_KEY not found. Put it in the .env file.")
+
 
 def collect_subtitles(video_id):
 
@@ -35,9 +37,48 @@ def collect_subtitles(video_id):
     }
 
     response = requests.get(url, headers=headers, params=querystring)
+    
+    if response.status_code != 200:
+        raise ValueError (f"RapidAPI error {response.status_code} : {response.text[:300]}")
+    data = response.json()
+    
     data = response.json()
 
-    subtitles = data["data"]["transcripts"]["en_auto"]["default"]
+    # Sometimes API returns JSON-as-string
+    if isinstance(data, str):
+        data = json.loads(data)
+
+    # Validate expected structure
+    if (
+        not isinstance(data, dict)
+        or "data" not in data
+        or not isinstance(data["data"], dict)
+        or "transcripts" not in data["data"]
+    ):
+        raise ValueError(f"Unexpected response shape: {str(data)[:300]}")
+
+    transcripts = data["data"]["transcripts"]
+
+
+
+    subtitles = None
+
+    if "en_auto" in transcripts:
+        subtitles = transcripts["en_auto"]["default"]
+
+    if subtitles is None:
+        if "en" in transcripts:
+            subtitles = transcripts["en"]["default"]
+
+    if subtitles is None:
+        keys = list(transcripts.keys())
+
+        if len(keys) > 0:
+            first_key = keys[0]
+            subtitles = transcripts[first_key]["default"]
+
+    if subtitles is None:
+        return ""
 
     all_subtitles = ""
 

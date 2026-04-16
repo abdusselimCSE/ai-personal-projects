@@ -1,49 +1,76 @@
-# 🤖 AI Personal Projects
+# Attendance Recognition System
 
-![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python)
-![Machine Learning](https://img.shields.io/badge/Machine%20Learning-Projects-green)
-![Status](https://img.shields.io/badge/Status-Active-success)
-![License](https://img.shields.io/badge/License-MIT-lightgrey)
+Python-based face recognition attendance system with:
 
-A curated collection of my **personal Artificial Intelligence and Machine Learning projects**, focused on **real-world problem solving**, clean code, and practical implementations.
+- Live face detection and recognition (InsightFace + OpenCV)
+- FastAPI endpoint for image-based recognition
+- Attendance logging to CSV
+- Optional Google Sheets sync for duplicate-safe daily attendance
 
----
+## Project Structure
 
-## 📌 About This Repository
+This repository is currently focused on:
 
-This repository serves as a **central hub** for my AI/ML learning journey and hands-on experimentation.  
-Each project is built to strengthen understanding of:
+- `attendence_system/` - backend attendance recognition service
 
-- Machine Learning fundamentals
-- Natural Language Processing (NLP)
-- API-based AI systems
-- Data preprocessing & modeling
-- Clean, maintainable Python code
+Main files:
 
----
+- `attendence_system/api.py` - FastAPI API (`/recognize`)
+- `attendence_system/database.py` - build face embeddings from `data/`
+- `attendence_system/main.py` - webcam-based recognition loop
+- `attendence_system/logger.py` - CSV + Google Sheets attendance logging
+- `attendence_system/config.py` - thresholds and runtime settings
 
-## 🧠 Current Project
+## Requirements
 
-### 🎥 YouTube Video Summarizer (NLP)
+- Python 3.10+
+- Camera access (for webcam mode)
+- Dependencies:
+  - `fastapi`
+  - `uvicorn`
+  - `opencv-python`
+  - `numpy`
+  - `insightface`
+  - `pillow`
+  - `requests`
 
-An AI-powered tool that:
+## Setup
 
-- Extracts subtitles from YouTube videos
-- Cleans and processes text
-- Generates concise summaries using NLP techniques
+1. Create and activate a virtual environment.
+2. Install dependencies:
 
-**Core Features**
+```bash
+pip install fastapi uvicorn opencv-python numpy insightface pillow requests python-multipart
+```
 
-- Subtitle collection & caching
-- Text preprocessing
-- Automatic summarization
-- Modular Python design
+3. Add training images inside:
 
-**Main Files**
+```text
+attendence_system/data/<PersonName>/*.jpg
+```
 
-- `main.py` – Entry point
-- `collect_subtitles.py` – Subtitle extraction
-- `summarizer.py` – NLP summarization logic
-- `cache.py` – Caching mechanism
+4. Build embeddings:
 
----
+```bash
+python attendence_system/database.py
+```
+
+## Run
+
+Run webcam mode:
+
+```bash
+python attendence_system/main.py
+```
+
+Run API mode:
+
+```bash
+uvicorn attendence_system.api:app --reload
+```
+
+## Notes
+
+- Attendance is logged in `attendence_system/attendance.csv`.
+- Matching threshold and cooldown can be changed in `attendence_system/config.py`.
+- The Flutter app folder (`attendance_app/`) is intentionally excluded from this repo push.

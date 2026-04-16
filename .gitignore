@@ -6,3 +6,8 @@ cache.json
 pythonVirEnv/
 tempCodeRunnerFile.py
 .DS_Store
+
+attendence_system/data/
+attendence_system/cropped_faces/
+attendence_system/attendance.csv
+attendence_system/__pycache__/

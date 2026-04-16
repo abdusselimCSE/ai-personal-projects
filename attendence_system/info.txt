@@ -1,0 +1,5 @@
+Deployment id : YOUR_DEPLOYMENT_ID
+
+Web app url : YOUR_WEB_APP_URL
+
+../pythonVirEnv/bin/uvicorn api:app --host 0.0.0.0 --port 8000
